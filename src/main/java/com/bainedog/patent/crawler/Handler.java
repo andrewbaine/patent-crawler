@@ -42,7 +42,7 @@ public class Handler {
             HttpUriRequest head = new HttpHead(uri);
             CloseableHttpResponse response = http.execute(head);
             for (Header h : response.getAllHeaders()) {
-                System.out.println(h.getName() + " -> " + h.getValue());
+                logger.info("{} -> {}", h.getName(), h.getValue());
                 String n = n(h.getName());
                 if ("etag".equals(n)) {
                     hm.setEtag(h.getValue());
@@ -56,7 +56,6 @@ public class Handler {
             response.close();
             logger.info("finished HEAD of {}", uri);
 
-            logger.info("begin s3 HEAD of {}", uri);
             String bucketName = "patent-cache-us-east-1-prod";
             String key = uri.replaceAll("http://", "").replaceAll("https://",
                     "");
@@ -64,6 +63,7 @@ public class Handler {
                     bucketName, key);
             ObjectMetadata s3meta = s3.getObjectMetadata(r);
 
+            logger.info("begin s3 HEAD of s3://{}/{}", bucketName, key);
             try {
                 S3Metadata s3Metadata = new S3Metadata();
                 s3Metadata.setContentLength(s3meta.getContentLength());
@@ -74,7 +74,7 @@ public class Handler {
             } catch (com.amazonaws.services.s3.model.AmazonS3Exception e) {
                 logger.error("exception calling s3", e);
             }
-            logger.info("finished s3 HEAD of {}", uri);
+            logger.info("finished s3 HEAD of s3://{}/{}", bucketName, key);
 
             logger.info("begin s3 PUT of {}", uri);
             HttpUriRequest get = new HttpGet(uri);
