@@ -78,7 +78,7 @@ public class Handler {
 
             logger.info("begin s3 PUT of {}", uri);
             HttpUriRequest get = new HttpGet(uri);
-            CloseableHttpResponse getResponse = http.execute(head);
+            CloseableHttpResponse getResponse = http.execute(get);
             InputStream inputStream = getResponse.getEntity().getContent();
             ObjectMetadata om = new ObjectMetadata();
             om.setContentLength(hm.getContentLength());
