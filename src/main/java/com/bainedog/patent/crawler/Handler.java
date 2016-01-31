@@ -61,10 +61,10 @@ public class Handler {
                     "");
             GetObjectMetadataRequest r = new GetObjectMetadataRequest(
                     bucketName, key);
-            ObjectMetadata s3meta = s3.getObjectMetadata(r);
 
             logger.info("begin s3 HEAD of s3://{}/{}", bucketName, key);
             try {
+                ObjectMetadata s3meta = s3.getObjectMetadata(r);
                 S3Metadata s3Metadata = new S3Metadata();
                 s3Metadata.setContentLength(s3meta.getContentLength());
                 s3Metadata.setMd5(s3meta.getContentMD5());
